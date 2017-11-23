@@ -2,16 +2,25 @@ class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
 
+  def home
+
+    @posts = Post.all
+
+  end
+
   # GET /posts
   # GET /posts.json
   def index
-    # @posts = Post.all
+
     @posts = current_user.posts
   end
 
   # GET /posts/1
   # GET /posts/1.json
   def show
+    if(@post.user.id != current_user.id)
+      redirect_to posts_path
+    end
   end
 
   # GET /posts/new
@@ -21,6 +30,9 @@ class PostsController < ApplicationController
 
   # GET /posts/1/edit
   def edit
+    if(@post.user.id != current_user.id)
+      redirect_to posts_path
+    end
   end
 
   # POST /posts
@@ -56,6 +68,9 @@ class PostsController < ApplicationController
   # DELETE /posts/1
   # DELETE /posts/1.json
   def destroy
+    if(@post.user.id != current_user.id)
+      redirect_to posts_path
+    end
     @post.destroy
     respond_to do |format|
       format.html { redirect_to posts_url, notice: 'Post was successfully destroyed.' }
